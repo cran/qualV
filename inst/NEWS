@@ -1,0 +1,17 @@
+0.2-1
+
+o added NEWS and THANKS
+
+0.2
+
+o code and documentation improvements
+o removed from .Rd: "## The function is currently defined as ..."
+
+0.1-1
+
+o documentation improvements
+
+
+0.1
+
+o initial version
