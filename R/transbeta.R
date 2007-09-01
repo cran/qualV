@@ -27,38 +27,6 @@ Bezier1D <- function (x, p) {
   c(Bernstein(x, length(p) - 1) %*% p)
 }
 
-#parallelRoot <- function (f, y, ..., interval, lower = min(interval),
-#                          upper = max(interval), iter = 12,
-#                          eps = 1E-10, do.plot = FALSE) {
-#  xl <- rep(lower, length(y))
-#  xu <- rep(upper, length(y))
-#  yl <- f(xl, ...)
-#  yu <- f(xu, ...)
-#  for (i in 1:iter) {
-#  # y = (yu - yl) ((xg - xl) / (xu - xl)) + yl
-#  xg <- ifelse(abs(yu - yl) > eps , (y - yl) * (xu - xl) / (yu - yl) + xl , (xl + xu) / 2)
-#  xg <- ifelse((xg - xl) < (xu - xl) / 10 , xl + (xu - xl) / 10 , xg)
-#  xg <- ifelse((xu - xg) < (xu - xl) / 10 , xu - (xu - xl) / 10 , xg)
-#  yg <- f(xg, ...)
-#  if(do.plot) {
-#    plot(c(lower, upper), f(c(lower, upper), ...),
-#      xlim = range(c(xg, xl, xu, lower, upper)),
-#      ylim = range(c(yg, yl, yu, lower, upper)))
-#    points(xl, yl, col = "red") 
-#    points(xu, yu, col = "green") 
-#    points(xg, yg, col = "black") 
-#    segments(xl, yl, xu, yu)
-#    segments(xg, y, xg, yg)
-#  }
-#  u  <- ifelse((yu - y) * (yg - y) > 0 , FALSE , TRUE)
-#  xl <- ifelse(u, xg, xl)
-#  yl <- ifelse(u, yg, yl)
-#  xu <- ifelse(u, xu, xg)
-#  yu <- ifelse(u, yu, yg)
-#}
-#  xg
-#}
-
 parallelRoot <- function (f, y, ... , interval, lower = min(interval),
                           upper = max(interval), iter = 12, eps = 1E-10,
                           do.plot = FALSE) {
@@ -100,13 +68,13 @@ solidOptim <- function (p0, f, mi, ma, n = 100, debug = FALSE) {
         } else if (i==2) {
           optim(p0, f, method = "L-BFGS-B", lower = mi, upper = ma) 
         } else {
-          p <- runif(length(p0)) * (ma-mi) + mi
+          p <- runif(length(p0)) * (ma - mi) + mi
           if(i%%3 == 0)
             optim(p, f, method = "Nelder-Mead")
           else if (i==5)
-            optim(p, f, method = "SANN", maxit = 5000)
+            optim(p, f, method = "SANN", control = list(maxit = 5000))
           else
-            optim(p, f, method = "L-BFGS-B", lower = mi, upper = ma) 
+            optim(p, f, method = "L-BFGS-B", lower = mi, upper = ma)
         }
       }, silent = TRUE), interrupt = function (e) assign("stp", TRUE, envir = env))
 #    optim(runif(length(p0)) * (ma - mi) + mi, f, method = "L-BFGS-B", lower = mi, upper = ma) })
@@ -121,7 +89,7 @@ solidOptim <- function (p0, f, mi, ma, n = 100, debug = FALSE) {
       if (debug) cat("=>", opt)
     }
     tr
-  } )
+  })
   if (debug) {
     print(sapply(li, function (x) {
       k <- x$convergence
@@ -164,7 +132,7 @@ compareME <- function (o, p,
   kapply <- function (l, f) c(sapply(l, f))
   if(hasNoTime) {
     # Use fixed measures
-    lapply(type, function (type) {
+    structure(lapply(type, function (type) {
       ftable(structure(
         kapply(time, function (time) {
           kapply(ignore, function (ignore) {
@@ -177,11 +145,11 @@ compareME <- function (o, p,
           } )
         } ),
         dim = dim, dimnames = dimnames), col.vars = col.vars)
-    } )
+    }), class="compareME")
   } else {
     # Use transformed measures
     tixList <- list(o = o, p = p, o.t = o.t, p.t = p.t, ...)
-    lapply(type, function(type) {
+    structure(lapply(type, function(type) {
       ftable(structure (
         kapply(time, function (time) {
           kapply(ignore, function (ignore) {
@@ -196,7 +164,7 @@ compareME <- function (o, p,
           } )
         } ),
         dim = dim, dimnames = dimnames), col.vars=col.vars)
-    } )
+    } ), class="compareME")
   }
 }
 
@@ -303,8 +271,11 @@ timeTransME <- function(o, p,
   erg
 }
 
-print.timeTransME <- function (x, ...) {
-  print(unclass(x[c("totalME")]))
+print.timeTransME <- function (x, ..., digits=3) {
+  oo <- options("digits")
+  options("digits"=digits)
+  print(unlist(x[c("totalME", "timeME")]))
+  options(oo)
 }
 
 summary.timeTransME <- function(object, ...) {
@@ -320,4 +291,15 @@ plot.timeTransME <- function(x, y = NULL, ..., col.obs = "black",
        type = "b", ..., col = col.obs, sub = sub)
   lines(x$xp, x$yp, type = "b", col = col.pred)
   lines(x$x, x$yp, type = "b", col = col.map)
+}
+
+print.compareME <- function (x, ..., digits=3) {
+  oo <- options("digits")
+  options("digits"=digits)
+  print(unclass(x))
+  options(oo)
+}
+
+summary.compareME <- function(object, ...) {
+  print(object, ...)
 }

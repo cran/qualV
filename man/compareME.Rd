@@ -1,5 +1,8 @@
 \name{compareME}
 \alias{compareME}
+\alias{print.compareME}
+\alias{summary.compareME}
+
 \title{Compute Several Deviance Measures for Comparison}
 
 \description{
@@ -15,6 +18,8 @@ compareME(o, p,
           type     = "normalized",
           time     = "fixed", ..., col.vars=c("time", "ignore")
          )
+\method{print}{compareME}(object, ..., digits = 3)
+\method{summary}{compareME}(object, ...)
 }
 \arguments{
   \item{o}{vector of observed values}
@@ -39,6 +44,7 @@ compareME(o, p,
   \item{...}{further arguments passed to \code{\link{timeTransME}} }
   \item{col.vars}{a sublist of \code{"ignore", "geometry", "measure",
       "time"} to be displayed in the columns of the resulting \code{ftable}.}
+  \item{digits}{number of significant digits displayed}
 }
 
 \value{
@@ -49,7 +55,9 @@ compareME(o, p,
 \details{
   The function provides a simple standard interface to get a first idea
   on the similarities and dissimilarities of two time series spanning the
-  same time interval.
+  same time interval. The \code{print} and \code{summary} methods extract
+  the relevant information, rounded to an optional number of significant 
+  digits.
 }
 \seealso{
   \code{\link{timeTransME}},
@@ -76,8 +84,6 @@ compareME(tt$yo, tt$yp)
 
 # show names of deviance measures
 compareME(type = "name")
-}
-
 }
 \keyword{misc}
 

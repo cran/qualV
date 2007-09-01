@@ -32,7 +32,7 @@ timeTransME(o, p,
             MEtype = c("dissimilarity", "normalized"),
             trials = 100,
             debug  = FALSE)
-\method{print}{timeTransME}(x, ...)
+\method{print}{timeTransME}(x, ..., digits = 3)
 \method{summary}{timeTransME}(object, ...)
 \method{plot}{timeTransME}(x, y = NULL, ..., col.obs = "black", col.pred = "green",
      col.map = "red", sub = x$call, xlab = "t",
@@ -56,7 +56,7 @@ ignored.}
   \item{measure}{one of \code{"mad", "sd", "var"} to specify the type of
     error to be measured.}
   \item{type}{one of
-    \code{"dissimilarity", "normalized", "similarity",\ "reference"} as
+    \code{"dissimilarity", "normalized", "similarity", "reference"} as
     defined in \code{\link{generalME}} to
     specify the type of deviance measure to be used.}
   \item{interval}{a vector with two entries giving start and end time of
@@ -77,8 +77,8 @@ ignored.}
   \item{timeME}{The \code{timeTransME} minimizes a weighted sum of the
     deformation of the time scale and of the data values
     according to \cr
-    \code{totalME =} min \code{ME(o(x), p(trans(x, timep)), MEtype) +\
-      timeMEFactor * timeME(x * timeScale, \
+    \code{totalME =} min \code{ME(o(x), p(trans(x, timep)), MEtype) +
+      timeMEFactor * timeME(x * timeScale,
       trans(x, timep) * timeScale, timeMEtype)} over p
     \cr
     for \code{x = c(ot, trans(pt, timep, inv = TRUE))}.
@@ -117,6 +117,7 @@ parameter.}
    \item{xlim}{the size of the plot in x-direction}
    \item{ylim}{the size of the plot in y-direction}
    \item{y}{y unused}
+   \item{digits}{number of significant digits displayed}
 }
 
 \value{
@@ -195,6 +196,7 @@ how long it takes to find an improved optimum.
 }
 
 \examples{
+set.seed(123)
 # a constructed example
 x <- seq(0, 2*pi, length=10)
 o <- 5 + sin(x) + rnorm(x, sd=0.2) # observation with random error

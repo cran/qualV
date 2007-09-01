@@ -157,7 +157,7 @@ based on the number of degrees of freedom of the residuals.
   package qualV), in preparation
 }
 
-\seealso{\code{\link{EF}}, \code{\link{GRI}}}
+\seealso{\code{\link{EF}}, \code{\link{GRI}}, \code{\link{compareME}}}
 \examples{
 data(phyto)
 obsb <- na.omit(obs[match(sim$t, obs$t), ])
