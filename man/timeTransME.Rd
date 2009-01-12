@@ -45,19 +45,17 @@ timeTransME(o, p,
   \item{p}{vector of predicted values}
   \item{o.t}{vector of observation times}
   \item{p.t}{vector of times for predicted values}
-  \item{ignore}{one of \code{"raw", "centered", "scaled", "ordered"} as defined
-    in
-    \cr
-    \code{\link{generalME}} to specify the aspects of the data to be
-ignored.}
+  \item{ignore}{one of \code{"raw"}, \code{"centered"}, \code{"scaled"} or
+    \code{"ordered"} as defined in \code{\link{generalME}} to specify the aspects
+    of the data to be ignored.}
   \item{geometry}{one of \code{"real", "logarithmic", "geometric", "ordinal"}
     as defined in \code{\link{generalME}} to specify the geometry of
     the observed data.}
   \item{measure}{one of \code{"mad", "sd", "var"} to specify the type of
     error to be measured.}
   \item{type}{one of
-    \code{"dissimilarity", "normalized", "similarity", "reference"} as
-    defined in \code{\link{generalME}} to
+    \code{"dissimilarity"}, \code{"normalized"}, \code{"similarity"} or
+    \code{"reference"} as defined in \code{\link{generalME}} to
     specify the type of deviance measure to be used.}
   \item{interval}{a vector with two entries giving start and end time of
         the experiment.}
@@ -70,20 +68,20 @@ ignored.}
     identity value can be given to force specific parameters for the
     transformation with \code{time = "fixed"}.}
   \item{pmin}{number or vector providing the minimal allowed values for
-    the parameters of the transformation}
+    the parameters of the transformation.}
   \item{pmax}{number or vector providing the minimal allowed values for
-    the parameters of the transformation}
+    the parameters of the transformation.}
   
   \item{timeME}{The \code{timeTransME} minimizes a weighted sum of the
     deformation of the time scale and of the data values
-    according to \cr
-    \code{totalME =} min \code{ME(o(x), p(trans(x, timep)), MEtype) +
-      timeMEFactor * timeME(x * timeScale,
-      trans(x, timep) * timeScale, timeMEtype)} over p
+    according to
+    \code{totalME =} minimum of
+     \preformatted{ME(o(x), p(trans(x, timep)), MEtype) +
+  timeMEFactor * timeME(x * timeScale,
+  trans(x, timep) * timeScale, timeMEtype)} over \code{p} for
+  \code{x = c(ot, trans(pt, timep, inv = TRUE))}.
     \cr
-    for \code{x = c(ot, trans(pt, timep, inv = TRUE))}.
-    \cr
-    timeME specifies the function to be used to quantify the temporal deformation.}
+    \code{timeME} specifies the function to be used to quantify the temporal deformation.}
   \item{timeMEtype}{the type of deviance measure (``dissimilarity'' or
                     ``normalized'') to be used for \code{timeME}.}
   \item{timeMEFactor}{a real value specifying the weighting of the time
@@ -93,8 +91,7 @@ ignored.}
     \code{timeME} is applied. This can be used to change the units of
     measurement for the time.}
   \item{ME}{the deviance function to be used for the data. See \code{\link{MSE}}
-           for alternatives.
-         }
+           for alternatives.}
   \item{MEtype}{the type of Mean Error to be used in the
 calculations. This is not the type of Measure to be reported.}
   \item{trials}{The number of random starting values that should be used
@@ -122,13 +119,12 @@ parameter.}
 
 \value{
 The result is an object of type \code{timeTransME} with the following entries:
-\item{totalME}{the requested measure with specified type}
+\item{totalME}{the requested measure with specified type,}
 \item{criterium}{the "dissimilarity" measure, which was calculated as a
   minimum of
-  \cr
-  \code{ME(o(x), p(trans(x, timep)), MEtype) + timeMEFactor *\
-    timeME(x * timeScale, trans(x, timep) * timeScale,\
-    timeMEtype)}.}
+  \preformatted{ME(o(x), p(trans(x, timep)), MEtype) + timeMEFactor *
+  timeME(x * timeScale, trans(x, timep) * timeScale,
+  timeMEtype)}.}
 \item{reference}{the reference value of this criterium achieved without
   time deformation and full dissimilarity.}
 \item{call}{the call used to generate this deviance.}
@@ -149,10 +145,10 @@ The result is an object of type \code{timeTransME} with the following entries:
 \item{p}{the parameter of trans minimizing the criterium.}
 \item{interval}{the interval of time under consideration}
 \item{trans}{the transformation function used for the time.}
-If there is actually a minimisation performed there is the additional
-list element:
 \item{optim}{contains informations about the convergence of the
-  optimization procedure and a list of secondary minima found.}
+  optimization procedure and a list of secondary minima found.
+  This additional list element occurs only if there is actually a minimisation
+  performed.}
 }
 
 \details{Common quantitative deviance measures underestimate the
@@ -166,12 +162,13 @@ list element:
 \code{ME(o(x), p(trans(x, timep)), MEtype) +
 timeMEFactor * timeME(x * timeScale, trans(x, timep) * timeScale, timeMEtype)} to
 find a best fitting time transformation.
-
-\item{\code{print.timeTransME}}{prints only the requested value, without
-  additional information.}
-\item{\code{summary.timeTransME}}{prints all the additional information.}
-\item{\code{plot.timeTransME}}{shows a picture visualising the fit of the
-  transformed dataset. This can be used as a diagnostic.}
+\describe{
+  \item{\code{print.timeTransME}}{prints only the requested value, without
+    additional information.}
+  \item{\code{summary.timeTransME}}{prints all the additional information.}
+  \item{\code{plot.timeTransME}}{shows a picture visualising the fit of the
+    transformed dataset. This can be used as a diagnostic.}
+}
 }
 
 \seealso{
@@ -190,14 +187,14 @@ minimum, when \code{trans = "transform"} is very high, because the
 optimization is done a hundred times with random starting values for
 the parameters. This is necessary since with the given objective the
 general purpose optimizers often run into local minima and/or do not
-convergence. The number of iterations can be controlled with the
+converge. The number of iterations can be controlled with the
 parameter \code{trials}. Setting \code{debug = TRUE} gives an impression
 how long it takes to find an improved optimum.
 }
 
 \examples{
 set.seed(123)
-# a constructed example
+## a constructed example
 x <- seq(0, 2*pi, length=10)
 o <- 5 + sin(x) + rnorm(x, sd=0.2) # observation with random error
 p <- 5 + sin(x-1)                  # simulation with time shift
@@ -215,15 +212,15 @@ ttbezier <- timeTransME(o, p, trans = transBezier, trials=5)
 plot(ttbezier)
 }
 
-# observed and measured data with non-matching time intervals
+## observed and measured data with non-matching time intervals
 data(phyto)
 bbobs    <- dpill(obs$t, obs$y)
-n        <- tail(obs$t, n = 1) - obs$t[1] + 1
-obsdpill <- ksmooth(obs$t, obs$y, kernel = "normal", bandwidth = bbobs,
+n        <- diff(range(obs$t)) + 1
+obss     <- ksmooth(obs$t, obs$y, kernel = "normal", bandwidth = bbobs,
             n.points = n)
-obss     <- data.frame(t = obsdpill$x, y = obsdpill$y)
-obss     <- obss[match(sim$t, obss$t), ]
-obss     <- na.omit(obss)
+names(obss) <- c("t", "y")            
+obss     <- as.data.frame(obss)[match(sim$t, obss$t), ]
+
 tt       <- timeTransME(obss$y, sim$y, obss$t, sim$t, ME = SMSE,
             timeMEFactor = 0, time = "transform", type = "n", trials = 5)
 round(tt$totalME, digits = 3)
@@ -246,17 +243,17 @@ plot(tt1)
 summary(tt1)
 
 \dontrun{
-tt2 <- timeTransME(obs$y, sim$y, obs$t, sim$t, ME = SMSLE, type = "n",
+tt2 <- timeTransME(obss$y, sim$y, obss$t, sim$t, ME = SMSLE, type = "n",
   time = "trans", debug = TRUE)
 tt2
-plot(tt2)
+plot(tt2)  # logarithm (SMSLE) is not appropriate for the example
 summary(tt2)
-tt3 <- timeTransME(obs$y, sim$y, obs$t, sim$t, ME = SMSLE, type = "n",
-  time = "trans", trans = transBezier)
+tt3 <- timeTransME(obss$y, sim$y, obss$t, sim$t, ME = SMSE, type = "n",
+  time = "trans", trans = transBezier, debug = TRUE)
 tt3
 plot(tt3)
 summary(tt3)
-tt4 <- timeTransME(obs$y, sim$y, obs$t, sim$t, ME = MSOE, type = "n",
+tt4 <- timeTransME(obss$y, sim$y, obss$t, sim$t, ME = MSOE, type = "n",
   time = "trans", trans = transBezier, debug = TRUE)
 tt4
 plot(tt4)
