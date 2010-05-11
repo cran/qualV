@@ -41,7 +41,7 @@ be smoothed.}
    \item{x}{a result from a call of \code{qvalLCS}}
    \item{y}{y unused}
    \item{\dots}{further parameters to be past to
-      \code{\link[base]{plot}}}
+      \code{\link{plot}}}
    \item{xlim}{the size of the plot in x-direction}
    \item{ylim}{the size of the plot in y-direction}
    \item{xlab}{the label of the x-axis of the plot}
@@ -106,7 +106,9 @@ The result is an object of type \code{qvalLCS} with the following entries:
 
   Jachner, S., K.G. v.d. Boogaart, T. Petzoldt (2007) Statistical methods
   for the qualitative assessment of dynamic models with time delay (R
-  package qualV), in preparation  
+  package qualV), Journal of Statistical Software, 22(8), 1--30.
+  URL \url{http://www.jstatsoft.org/v22/i08/}. 
+
 }
 
 \seealso{
