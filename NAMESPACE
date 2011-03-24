@@ -1,3 +1,5 @@
+useDynLib(qualV, .registration = TRUE)
+
 import("KernSmooth")
 
 exportPattern(".*M.*E")
